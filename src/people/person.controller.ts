@@ -1,33 +1,38 @@
+import { service } from '@loopback/core';
 import { Count, CountSchema, FilterExcludingWhere, repository, Where } from '@loopback/repository';
 import { del, get, getModelSchemaRef, param, patch, post, put, requestBody, response } from '@loopback/rest';
 import { Person } from './person.model';
 import { PersonRepository } from './person.repository';
+import { PersonSchema } from './person.schema';
+import { PersonService } from './person.service';
 
 export class PersonController {
 	constructor(
 		@repository(PersonRepository)
-		public personRepository: PersonRepository
+		public personRepository: PersonRepository,
+		@service(PersonService)
+		public personService: PersonService
 	) {}
 
 	@post('/people')
 	@response(200, {
 		description: 'Person model instance',
-		content: { 'application/json': { schema: getModelSchemaRef(Person) } }
+		content: { 'application/json': { schema: getModelSchemaRef(PersonSchema) } }
 	})
 	async create(
 		@requestBody({
 			content: {
 				'application/json': {
-					schema: getModelSchemaRef(Person, {
+					schema: getModelSchemaRef(PersonSchema, {
 						title: 'NewPerson',
 						exclude: ['id_person']
 					})
 				}
 			}
 		})
-		person: Omit<Person, 'id_person'>
-	): Promise<Person> {
-		return this.personRepository.create(person);
+		person: Omit<PersonSchema, 'id_person'>
+	): Promise<PersonSchema> {
+		return this.personService.create(person);
 	}
 
 	@get('/people/count')

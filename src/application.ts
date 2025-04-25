@@ -7,6 +7,7 @@ import { ServiceMixin } from '@loopback/service-proxy';
 import path from 'path';
 import { EmailRepository, IndividualPersonRepository, LegalPersonRepository, PersonRepository } from './repositories';
 import { MySequence } from './sequence';
+import { PersonService } from './services';
 
 export { ApplicationConfig };
 
@@ -31,6 +32,7 @@ export class ApiSalesApplication extends BootMixin(ServiceMixin(RepositoryMixin(
 		this.repository(PersonRepository);
 		this.repository(IndividualPersonRepository);
 		this.repository(LegalPersonRepository);
+		this.service(PersonService);
 
 		// Customize @loopback/boot Booter Conventions here
 		this.bootOptions = {
